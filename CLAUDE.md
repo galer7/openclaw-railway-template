@@ -9,7 +9,6 @@ This is a Railway deployment wrapper for **OpenClaw** (an AI coding assistant pl
 - A web-based setup wizard at `/setup` (protected by `SETUP_PASSWORD`)
 - Automatic reverse proxy from public URL → internal OpenClaw gateway
 - Persistent state via Railway Volume at `/data`
-- One-click backup export of configuration and workspace
 
 The wrapper manages the OpenClaw lifecycle: onboarding → gateway startup → traffic proxying.
 
@@ -123,14 +122,6 @@ The wrapper **always** injects the bearer token into proxied requests so browser
 **Important**: Token injection uses `http-proxy` event handlers (`proxyReq` and `proxyReqWs`) rather than direct `req.headers` modification. Direct header modification does not reliably work with WebSocket upgrades, causing intermittent `token_missing` or `token_mismatch` errors.
 
 This allows the Control UI at `/openclaw` to work without user authentication.
-
-### Backup Export
-
-`GET /setup/export` (src/server.js:752-800):
-
-- Creates a `.tar.gz` archive of `STATE_DIR` and `WORKSPACE_DIR`
-- Preserves relative structure under `/data` (e.g., `.openclaw/`, `workspace/`)
-- Includes dotfiles (config, credentials, sessions)
 
 ## Common Development Tasks
 
